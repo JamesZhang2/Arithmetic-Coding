@@ -1,37 +1,16 @@
-public class FixedProbDecoder extends AbstractDecoder {
-    private final double[] probs;  // cumulative probabilities
-    // must be the same as the probabilities used in the encoder
+/**
+ * A class representing the decoder in arithmetic coding (AC).
+ */
+public class ACDecoder extends AbstractDecoder {
+    private final ProbModel probModel;
 
     /**
-     * Assigns equal probability to the range of printable ASCII characters (32-126, inclusive)
-     * and the end-of-text symbol
+     * Creates an AC decoder with the given probabilistic model.
+     * Note that this should be a new instance of the same probabilistic model
+     * as the one used in the encoder,
      */
-    public FixedProbDecoder() {
-        this.probs = new double[127];
-        double delta = 1.0 / (126 - 32 + 2);
-        double sum = 0;
-        for (int i = 32; i <= 126; i++) {
-            sum += delta;
-            probs[i] = sum;
-        }
-        System.out.println(probs[126]);
-    }
-
-    /**
-     * Creates a fixed probability decoder with the given cumulative probabilities.
-     * Requires: Uses the same cumulative probabilities as the encoder
-     *
-     * @param probs cumulative probabilities
-     */
-    public FixedProbDecoder(double[] probs) {
-        this.probs = probs.clone();
-    }
-
-    /**
-     * Creates a fixed probability decoder based on the encoder.
-     */
-    public FixedProbDecoder(FixedProbEncoder encoder) {
-        this.probs = encoder.getProbs();
+    public ACDecoder(ProbModel probModel) {
+        this.probModel = probModel;
     }
 
     @Override
@@ -53,6 +32,7 @@ public class FixedProbDecoder extends AbstractDecoder {
             nextBit++;
         }
         while (true) {
+            double[] probs = probModel.getProbs();
             assert low <= encoded && encoded < high;
             boolean found = false;
             if (encoded >= low + (high - low) * probs[probs.length - 1]) {
@@ -64,6 +44,9 @@ public class FixedProbDecoder extends AbstractDecoder {
                     && encoded + Math.pow(2, -nextBit + renorms - 1) < low + (high - low) * probs[c]) {
                     // next char is c
                     sb.append(c);
+
+                    probModel.update(c);  // inform the probabilistic model that the next character is c
+
                     // shrink the range
                     if (c == 0) {
                         high = low + (high - low) * probs[0];
@@ -75,6 +58,7 @@ public class FixedProbDecoder extends AbstractDecoder {
                     }
                     assert low <= encoded && encoded < high
                             : String.format("low: %f\nencoded: %f\nhigh: %f", low, encoded, high);
+
                     // if completely lies in one half, renormalize and bring in another bit
                     while (high <= 0.5 || low >= 0.5) {
                         if (high <= 0.5) {
