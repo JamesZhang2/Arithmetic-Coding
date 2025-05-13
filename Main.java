@@ -2,8 +2,9 @@ import java.io.File;
 
 public class Main {
     public static void main(String[] args) {
-        testABC();
-        testDefaultFixed();
+//        testABC();
+//        testDefaultFixed();
+        testDirichlet();
     }
 
     private static void testABC() {
@@ -40,6 +41,15 @@ public class Main {
         byte[] bytes = encoder.encode("Mary had a little lamb!");
         defaultFixed = new FixedProbModel();
         Decoder decoder = new ACDecoder(defaultFixed);
+        System.out.println(decoder.decode(bytes));
+    }
+
+    private static void testDirichlet() {
+        ProbModel dirichlet = new DirichletModel();
+        Encoder encoder = new ACEncoder(dirichlet);
+        byte[] bytes = encoder.encode("The quick brown fox jumps over the lazy dog.");
+        dirichlet = new DirichletModel();
+        Decoder decoder = new ACDecoder(dirichlet);
         System.out.println(decoder.decode(bytes));
     }
 }

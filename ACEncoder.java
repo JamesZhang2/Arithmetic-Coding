@@ -23,6 +23,7 @@ public class ACEncoder extends AbstractEncoder {
         double high = 1;
         for (char c : chars) {
             double[] probs = probModel.getProbs();
+            assert probs[probs.length - 1] < 1;
             if (c >= probs.length) {
                 throw new IllegalArgumentException("Character " + c + " out of range of cumulative probabilities");
             }
