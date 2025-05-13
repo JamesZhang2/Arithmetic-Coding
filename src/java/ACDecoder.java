@@ -34,7 +34,8 @@ public class ACDecoder extends AbstractDecoder {
         while (true) {
             double[] probs = probModel.getProbs();
             assert probs[probs.length - 1] < 1;
-            assert low <= encoded && encoded < high;
+            assert low <= encoded && encoded < high
+                : String.format("low: %f, encoded: %f, high: %f", low, encoded, high);
             boolean found = false;
             if (encoded >= low + (high - low) * probs[probs.length - 1]) {
                 // end of file
