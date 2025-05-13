@@ -18,6 +18,8 @@ class ACTest {
 
         String[] strings = {
                 "A",  // Should be between 0.27 and 0.3 if we print decimal fraction
+                "B",  // Should be between 0.63 and 0.7 if we print decimal fraction
+                "C",  // Should be between 0.81 and 0.9 if we print decimal fraction
                 "AB", // Should be between 0.188 and 0.21 if we print decimal fraction
                 "ABCAB",
                 "ACABBABBBCCCABAABCABCABCACABAAABCBCCCCCCBABBB"

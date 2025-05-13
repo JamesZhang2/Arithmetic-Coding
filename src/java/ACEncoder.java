@@ -20,6 +20,7 @@ public class ACEncoder extends AbstractEncoder {
         char[] chars = text.toCharArray();
         double low = 0;
         double high = 1;
+        int underflows = 0;
         for (char c : chars) {
             double[] probs = probModel.getProbs();
             assert probs[probs.length - 1] < 1;
@@ -44,16 +45,29 @@ public class ACEncoder extends AbstractEncoder {
             }
 
             // if completely lies in one half, output a bit and renormalize
-            while (high <= 0.5 || low >= 0.5) {
+            // if completely lies in the middle half, i.e. [0.25, 0.75),
+            // we scale it up and remember there was an underflow condition
+            while (high <= 0.5 || low >= 0.5 || (high <= 0.75 && low >= 0.25)) {
                 if (high <= 0.5) {
                     ans.add(0);
+                    while (underflows > 0) {
+                        ans.add(1);
+                        underflows--;
+                    }
                     low *= 2;
                     high *= 2;
-                } else {
-                    // low >= 0.5
+                } else if (low >= 0.5){
                     ans.add(1);
+                    while (underflows > 0) {
+                        ans.add(0);
+                        underflows--;
+                    }
                     low = (low - 0.5) * 2;
                     high = (high - 0.5) * 2;
+                } else {
+                    low = (low - 0.25) * 2;
+                    high = (high - 0.25) * 2;
+                    underflows++;
                 }
             }
         }
@@ -63,19 +77,27 @@ public class ACEncoder extends AbstractEncoder {
         while (high <= 0.5 || low >= 0.5) {
             if (high <= 0.5) {
                 ans.add(0);
+                while (underflows > 0) {
+                    ans.add(1);
+                    underflows--;
+                }
                 low *= 2;
                 high *= 2;
             } else {
                 // low >= 0.5
                 ans.add(1);
+                while (underflows > 0) {
+                    ans.add(0);
+                    underflows--;
+                }
                 low = (low - 0.5) * 2;
                 high = (high - 0.5) * 2;
             }
         }
         // we must have low < 0.5 and high > 0.5, so we can output 0.5 which is a 1 in binary
         ans.add(1);
-//        printAsBinaryFraction(ans);
-//        printAsApproxDecimalFraction(ans);
+        printAsBinaryFraction(ans);
+        printAsApproxDecimalFraction(ans);
         return toByteArray(ans);
     }
 }
