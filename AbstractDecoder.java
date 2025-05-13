@@ -26,6 +26,7 @@ public abstract class AbstractDecoder implements Decoder {
             System.out.println("Writing output to file " + output.getName());
             FileWriter writer = new FileWriter(output);
             writer.write(decode(bytes));
+            writer.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

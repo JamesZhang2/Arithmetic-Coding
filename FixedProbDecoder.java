@@ -1,5 +1,3 @@
-import java.util.concurrent.TimeUnit;
-
 public class FixedProbDecoder extends AbstractDecoder {
     private final double[] probs;  // cumulative probabilities
     // must be the same as the probabilities used in the encoder
@@ -51,29 +49,20 @@ public class FixedProbDecoder extends AbstractDecoder {
         int renorms = 0;  // number of renormalizations
         int nextBit = 0;  // next bit to bring in from the bytes
         for (int i = 0; i < 16; i++) {
-//            System.out.println("getBit (nextBit = " + nextBit + "): " + getBit(bytes, nextBit));
             encoded += getBit(bytes, nextBit) * Math.pow(2, -nextBit - 1);
             nextBit++;
         }
-//        System.out.println("encoded: " + encoded);
         while (true) {
-//            try {
-//                Thread.sleep(500);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
             assert low <= encoded && encoded < high;
             boolean found = false;
             if (encoded >= low + (high - low) * probs[probs.length - 1]) {
                 // end of file
                 return sb.toString();
             }
-//            System.out.println("encoded: " + encoded);
             for (char c = 0; c < probs.length; c++) {
                 if (encoded >= low + (high - low) * (c == 0 ? 0 : probs[c - 1])
                     && encoded + Math.pow(2, -nextBit + renorms - 1) < low + (high - low) * probs[c]) {
                     // next char is c
-//                    System.out.println("Next char is: " + c);
                     sb.append(c);
                     // shrink the range
                     if (c == 0) {

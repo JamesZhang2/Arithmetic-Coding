@@ -1,3 +1,5 @@
+import java.io.File;
+
 public class Main {
     public static void main(String[] args) {
         double[] probs = new double[127];
@@ -12,6 +14,7 @@ public class Main {
         byte[] abBytes = encoder.encode("AB");  // Should be between 0.188 and 0.21
         byte[] abcabBytes = encoder.encode("ABCAB");
         byte[] longBytes = encoder.encode("ACABBABBBCCCABAABCABCABCACABAAABCBCCCCCCBABBB");
+        encoder.encode("CABBACCCCCBABA", new File("abc.txt"));
 //        for (byte b : aBytes) {
 //            System.out.println(b);
 //        }
@@ -25,5 +28,7 @@ public class Main {
         System.out.println(decoder.decode(abBytes));
         System.out.println(decoder.decode(abcabBytes));
         System.out.println(decoder.decode(longBytes));
+        System.out.println(decoder.decode(new File("abc.txt")));
+        decoder.decode(new File("abc.txt"), new File("def.txt"));
     }
 }

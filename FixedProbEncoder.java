@@ -92,7 +92,7 @@ public class FixedProbEncoder extends AbstractEncoder {
         // we must have low < 0.5 and high > 0.5, so we can output 0.5 which is a 1 in binary
         ans.add(1);
 //        printAsBinaryFraction(ans);
-        printAsApproxDecimalFraction(ans);
+//        printAsApproxDecimalFraction(ans);
         return toByteArray(ans);
     }
 
