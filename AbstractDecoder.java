@@ -30,4 +30,16 @@ public abstract class AbstractDecoder implements Decoder {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Get the ith bit (0-indexed) after the decimal point
+     * of the binary fractional number represented by bytes.
+     * Note that we pad the number with an infinite number of zeros at the end.
+     */
+    protected int getBit(byte[] bytes, int i) {
+        if (i >= bytes.length * 8) {
+            return 0;
+        }
+        return (bytes[i / 8] >> (7 - i % 8)) & 1;
+    }
 }

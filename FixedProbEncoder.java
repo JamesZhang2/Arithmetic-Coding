@@ -48,6 +48,9 @@ public class FixedProbEncoder extends AbstractEncoder {
             if (c >= probs.length) {
                 throw new IllegalArgumentException("Character " + c + " out of range of cumulative probabilities");
             }
+            if ((c == 0 && probs[0] == 0) || (c > 0 && probs[c] == probs[c - 1])) {
+                throw new IllegalArgumentException("Character " + c + " is not supported since it has probability 0");
+            }
             // encode character c
             // shrink the range
             if (c == 0) {
@@ -89,7 +92,14 @@ public class FixedProbEncoder extends AbstractEncoder {
         // we must have low < 0.5 and high > 0.5, so we can output 0.5 which is a 1 in binary
         ans.add(1);
 //        printAsBinaryFraction(ans);
-//        printAsApproxDecimalFraction(ans);
+        printAsApproxDecimalFraction(ans);
         return toByteArray(ans);
+    }
+
+    /**
+     * @return a copy of the cumulative probabilities
+     */
+    public double[] getProbs() {
+        return probs.clone();
     }
 }

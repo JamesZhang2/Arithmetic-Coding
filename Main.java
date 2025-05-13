@@ -8,7 +8,22 @@ public class Main {
             probs[c] = probs[c - 1];
         }
         Encoder encoder = new FixedProbEncoder(probs);
-        encoder.encode("A");  // Should be between 0.27 and 0.3
-        encoder.encode("AB");  // Should be between 0.188 and 0.21
+        byte[] aBytes = encoder.encode("A");  // Should be between 0.27 and 0.3
+        byte[] abBytes = encoder.encode("AB");  // Should be between 0.188 and 0.21
+        byte[] abcabBytes = encoder.encode("ABCAB");
+        byte[] longBytes = encoder.encode("ACABBABBBCCCABAABCABCABCACABAAABCBCCCCCCBABBB");
+//        for (byte b : aBytes) {
+//            System.out.println(b);
+//        }
+//        System.out.println("----------");
+//        for (byte b : abBytes) {
+//            System.out.println(b);
+//        }
+
+        Decoder decoder = new FixedProbDecoder(probs);
+        System.out.println(decoder.decode(aBytes));
+        System.out.println(decoder.decode(abBytes));
+        System.out.println(decoder.decode(abcabBytes));
+        System.out.println(decoder.decode(longBytes));
     }
 }
