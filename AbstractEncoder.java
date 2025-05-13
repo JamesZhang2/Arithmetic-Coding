@@ -20,6 +20,22 @@ public abstract class AbstractEncoder implements Encoder {
         }
     }
 
+    @Override
+    public void encode(File input, File output) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(input));
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+            while (line != null) {
+                sb.append(line);
+                line = br.readLine();
+            }
+            encode(sb.toString(), output);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Print a list of 1s and 0s as a binary fraction (for debugging purposes)
      */

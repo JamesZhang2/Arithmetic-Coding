@@ -7,7 +7,12 @@ public interface Encoder {
     byte[] encode(String text);
 
     /**
-     * Encodes the given text and writes the encoded bytes into a file.
+     * Encodes the given text and writes the encoded bytes to the output file.
      */
     void encode(String text, File output);
+
+    /**
+     * Encodes the text in the input file and writes the encoded bytes to the output file.
+     */
+    void encode(File input, File output);
 }
