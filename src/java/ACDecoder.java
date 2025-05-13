@@ -13,6 +13,14 @@ public class ACDecoder extends AbstractDecoder {
         this.probModel = probModel;
     }
 
+    /**
+     * The default constructor uses the default fixed probability model.
+     */
+    public ACDecoder() {
+        this.probModel = new FixedProbModel();
+    }
+
+
     @Override
     public String decode(byte[] bytes) {
         // To decode, we first read in several bits and convert it to a double.

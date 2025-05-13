@@ -14,6 +14,13 @@ public class ACEncoder extends AbstractEncoder {
         this.probModel = probModel;
     }
 
+    /**
+     * The default constructor uses the default fixed probability model.
+     */
+    public ACEncoder() {
+        this.probModel = new FixedProbModel();
+    }
+
     @Override
     public byte[] encode(String text) {
         List<Integer> ans = new ArrayList<>();  // 1s and 0s
@@ -96,8 +103,8 @@ public class ACEncoder extends AbstractEncoder {
         }
         // we must have low < 0.5 and high > 0.5, so we can output 0.5 which is a 1 in binary
         ans.add(1);
-        printAsBinaryFraction(ans);
-        printAsApproxDecimalFraction(ans);
+//        printAsBinaryFraction(ans);
+//        printAsApproxDecimalFraction(ans);
         return toByteArray(ans);
     }
 }

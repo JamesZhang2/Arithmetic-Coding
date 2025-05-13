@@ -11,3 +11,4 @@ References:
 - https://www.youtube.com/watch?v=RFWJM8JMXBs
 - https://michaeldipperstein.github.io/arithmetic.html
 - I asked ChatGPT a few high-level conceptual questions but didn't use it to generate code.
+- I used Alice's Adventures in Wonderland as a sample text. This is found in The Project Gutenberg: https://www.gutenberg.org/ebooks/11. I replaced non-ASCII characters with ASCII characters.
