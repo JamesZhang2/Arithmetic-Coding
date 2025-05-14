@@ -1,3 +1,5 @@
+package coding;
+
 import java.io.File;
 
 public interface Encoder {

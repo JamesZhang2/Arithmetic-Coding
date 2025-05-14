@@ -1,8 +1,12 @@
+package coding.ac;
+
+import coding.AbstractEncoder;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A class representing the encoder in arithmetic coding (AC).
+ * Represents the encoder in arithmetic coding (AC).
  */
 public class ACEncoder extends AbstractEncoder {
     private final ProbModel probModel;

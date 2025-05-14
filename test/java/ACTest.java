@@ -1,3 +1,6 @@
+import coding.ac.*;
+import coding.Decoder;
+import coding.Encoder;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
@@ -110,44 +113,44 @@ class ACTest {
         // Encode string into a file
         String text = "The rain in Spain stays mainly in the plain.";  // this is actually not true by the way
         Encoder encoder = encGen.generate();
-        encoder.encode(text, new File("rain.ac"));
+        encoder.encode(text, new File("rain.coding.ac"));
 
         // Decode file back into a string and compare contents
         Decoder decoder = decGen.generate();
-        assertEquals(text, decoder.decode(new File("rain.ac")));
+        assertEquals(text, decoder.decode(new File("rain.coding.ac")));
 
         // Encode file into a file
         encoder = encGen.generate();
-        encoder.encode(new File("sampleTexts/fox.txt"), new File("fox.ac"));
+        encoder.encode(new File("sampleTexts/fox.txt"), new File("fox.coding.ac"));
 
         // Decode file into a file
         decoder = decGen.generate();
-        decoder.decode(new File("fox.ac"), new File("fox_decoded.txt"));
+        decoder.decode(new File("fox.coding.ac"), new File("fox_decoded.txt"));
 
         // Compare file contents
         assertFileContentEquals("sampleTexts/fox.txt", "fox_decoded.txt");
 
         // clean up
-        (new File("fox.ac")).delete();
-        (new File("rain.ac")).delete();
+        (new File("fox.coding.ac")).delete();
+        (new File("rain.coding.ac")).delete();
         (new File("fox_decoded.txt")).delete();
     }
 
     private void testLargeFiles(EncoderGenerator encGen, DecoderGenerator decGen) {
         // Encode file into a file
         Encoder encoder = encGen.generate();
-        encoder.encode(new File("sampleTexts/alice1.txt"), new File("alice1.ac"));
+        encoder.encode(new File("sampleTexts/alice_full.txt"), new File("alice_full.coding.ac"));
 
         // Decode file into a file
         Decoder decoder = decGen.generate();
-        decoder.decode(new File("alice1.ac"), new File("alice1_decoded.txt"));
+        decoder.decode(new File("alice_full.coding.ac"), new File("alice_full_decoded.txt"));
 
         // Compare file contents
-        assertFileContentEquals("sampleTexts/alice1.txt", "alice1_decoded.txt");
+        assertFileContentEquals("sampleTexts/alice_full.txt", "alice1_decoded.txt");
 
         // clean up
-        (new File("alice1.ac")).delete();
-        (new File("alice1_decoded.txt")).delete();
+        (new File("alice_full.coding.ac")).delete();
+        (new File("alice_full_decoded.txt")).delete();
     }
 
     private void testAll(EncoderGenerator encGen, DecoderGenerator decGen) {

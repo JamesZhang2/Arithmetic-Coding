@@ -1,3 +1,5 @@
+package coding.ac;
+
 /**
  * An interface for the probabilistic models used in arithmetic coding.
  */

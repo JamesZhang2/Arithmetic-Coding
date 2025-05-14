@@ -1,3 +1,5 @@
+package coding.ac;
+
 /**
  * A probability model where the probability of each character is fixed,
  * regardless of what the context (previous characters) is.

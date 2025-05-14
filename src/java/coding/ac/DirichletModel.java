@@ -1,3 +1,5 @@
+package coding.ac;
+
 /**
  * Dirichlet model used in adaptive arithmetic coding,
  * as described on Page 117, Section 6.2 of David MacKay's book

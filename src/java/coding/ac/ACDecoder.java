@@ -1,5 +1,9 @@
+package coding.ac;
+
+import coding.AbstractDecoder;
+
 /**
- * A class representing the decoder in arithmetic coding (AC).
+ * Represents the decoder in arithmetic coding (AC).
  */
 public class ACDecoder extends AbstractDecoder {
     private final ProbModel probModel;
