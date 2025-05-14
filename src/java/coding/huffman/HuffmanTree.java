@@ -30,6 +30,7 @@ public class HuffmanTree {
     @Override
     public String toString() {
         if (left == null && right == null) {
+            assert c != null;
             return (c == 128 ? "EOF" : String.valueOf(c));
         } else {
             StringBuilder sb = new StringBuilder();

@@ -49,11 +49,6 @@ public class HuffmanEncoder extends AbstractEncoder {
         // but characters can be merged into the same group.
         // When merging, the group number of the bigger group becomes the new group number.
 
-        // charToGroup[c] is the group that character c belong to
-        int[] charToGroup = new int[freqs.length];
-        for (int i = 0; i < charToGroup.length; i++) {
-            charToGroup[i] = i;
-        }
         // groupSizes[g] is the size of group g
         int[] groupSizes = new int[freqs.length];
         Arrays.fill(groupSizes, 1);
@@ -84,7 +79,6 @@ public class HuffmanEncoder extends AbstractEncoder {
             if (groupSizes[g1] >= groupSizes[g2]) {
                 // new group name is g1
                 for (int c : groupToChars.get(g2)) {
-                    charToGroup[c] = g1;
                     groupToChars.get(g1).add(c);
                 }
                 groupToChars.get(g2).clear();
@@ -96,7 +90,6 @@ public class HuffmanEncoder extends AbstractEncoder {
             } else {
                 // new group name is g2
                 for (int c : groupToChars.get(g1)) {
-                    charToGroup[c] = g2;
                     groupToChars.get(g2).add(c);
                 }
                 groupToChars.get(g1).clear();
@@ -125,15 +118,67 @@ public class HuffmanEncoder extends AbstractEncoder {
     public HuffmanEncoder(List<List<Integer>> codes) {
         assert codes.size() == 129;
         this.codes = new ArrayList<>();
-        for (int i = 0; i < 129; i++) {
-            this.codes.add(new LinkedList<>(codes.get(i)));
+        for (char c = 0; c < 129; c++) {
+            this.codes.add(new LinkedList<>(codes.get(c)));
         }
         this.tree = generateTreeFromCodes(codes);
     }
 
+    /**
+     * Creates a Huffman encoder based on the given codes for each character.
+     * Requires: codeMap maps characters to their codewords, represented as a String of 1s and 0s.
+     * Only characters that are used at least once are in the codeMap.
+     * codeMap[128] is the codeword for the end-of-file symbol.
+     */
+    public HuffmanEncoder(Map<Character, String> codeMap) {
+        codes = new ArrayList<>();
+        for (char c = 0; c < 129; c++) {
+            List<Integer> code = new ArrayList<>();
+            String codeStr = codeMap.get(c);
+            if (codeStr != null) {
+                for (int i = 0; i < codeStr.length(); i++) {
+                    assert codeStr.charAt(i) == '0' || codeStr.charAt(i) == '1';
+                    code.add(codeStr.charAt(i) == '0' ? 0 : 1);
+                }
+            }
+            codes.add(code);
+        }
+        System.out.println(codes);
+        this.tree = generateTreeFromCodes(codes);
+        System.out.println(this.tree);
+    }
+
+    /**
+     * Generates the Huffman tree based on the given codes.
+     * Postcondition: codes is unchanged.
+     */
     private HuffmanTree generateTreeFromCodes(List<List<Integer>> codes) {
-        return new HuffmanTree();
-        // TODO
+        HuffmanTree root = new HuffmanTree();
+        for (char c = 0; c < codes.size(); c++) {
+            if (codes.get(c).isEmpty()) {
+                continue;
+            }
+            HuffmanTree cur = root;
+            for (int i = 0; i < codes.get(c).size(); i++) {
+                if (codes.get(c).get(i) == 0) {
+                    // go left
+                    if (cur.left == null) {
+                        cur.left = new HuffmanTree();
+                    }
+                    cur = cur.left;
+                } else if (codes.get(c).get(i) == 1) {
+                    // go right
+                    if (cur.right == null) {
+                        cur.right = new HuffmanTree();
+                    }
+                    cur = cur.right;
+                } else {
+                    throw new IllegalArgumentException(String.format("Index %d of the codeword for %c is not 0 or 1. It's %d.", i, c, codes.get(c).get(i)));
+                }
+            }
+            cur.c = c;
+        }
+        return root;
     }
 
     /**

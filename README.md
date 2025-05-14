@@ -35,5 +35,5 @@ If `[low, high)` falls entirely in $[0, \frac{1}{2})$ or $[\frac{1}{2}, 1)$ or $
 - Wikipedia page on Huffman coding: https://en.wikipedia.org/wiki/Huffman_coding
 - https://www.youtube.com/watch?v=RFWJM8JMXBs
 - https://michaeldipperstein.github.io/arithmetic.html
-- I asked ChatGPT a few high-level conceptual questions and to look up documentation, but didn't use it to generate code.
+- I asked ChatGPT a few high-level conceptual questions and to look up documentation, but didn't use it to generate large chunks of code.
 - I used Alice's Adventures in Wonderland as a sample text. This is found in The Project Gutenberg: https://www.gutenberg.org/ebooks/11. I replaced non-ASCII characters with ASCII characters.
