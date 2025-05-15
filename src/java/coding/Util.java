@@ -1,5 +1,6 @@
 package coding;
 
+import java.io.*;
 import java.util.List;
 
 /**
@@ -14,8 +15,32 @@ public class Util {
      */
     public static int[] countFreqs(String text) {
         int[] freqs = new int[129];
-        for (int i = 0; i < text.length(); i++) {
-            freqs[text.charAt(i)]++;
+        for (char c : text.toCharArray()) {
+            freqs[c]++;
+        }
+        freqs[128] = 1;  // end-of-file symbol
+        return freqs;
+    }
+
+    /**
+     * Counts the frequencies of characters of the contents in the given file.
+     * @return an array freqs of size 129 where freqs[c] is the number of times
+     * that character c appears in text for ASCII characters c in [0, 127],
+     * and freqs[128] is the number of times that the end-of-file symbol appears (always 1).
+     */
+    public static int[] countFreqs(File file) {
+        int[] freqs = new int[129];
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line = br.readLine();
+            while (line != null) {
+                for (char c : line.toCharArray()) {
+                    freqs[c]++;
+                }
+                line = br.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         freqs[128] = 1;  // end-of-file symbol
         return freqs;

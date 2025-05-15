@@ -3,6 +3,7 @@ package coding.huffman;
 import coding.AbstractEncoder;
 import coding.Util;
 
+import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,12 +44,12 @@ public class HuffmanEncoder extends AbstractEncoder {
     }
 
     /**
-     * Creates a Huffman encoder based on the text to encode.
-     * Requires: text is not empty.
+     * Construct a Huffman encoder with the given character frequencies.
+     * freqs[c] is the frequency of character c in the text to be encoded.
+     * Requires: freqs.length == 129 && freqs[128] == 1
      */
-    public HuffmanEncoder(String text) {
-        assert !text.isEmpty();
-        int[] freqs = Util.countFreqs(text);
+    private HuffmanEncoder(int[] freqs) {
+        assert freqs.length == 129 && freqs[128] == 1;
         // Greedy algorithm: take the two least frequent symbols,
         // merge the two symbols into a new symbol by creating a new node with those symbols as children.
         // Repeat until there is only one symbol left.
@@ -128,9 +129,25 @@ public class HuffmanEncoder extends AbstractEncoder {
         }
         assert pq.size() == 1;
         int[] pair = pq.poll();
-        assert pair[1] == text.length() + 1;  // final node should have all the frequency (+1 for end-of-file)
+//        assert pair[1] == text.length() + 1;  // final node should have all the frequency (+1 for end-of-file)
         this.tree = trees.get(pair[0]);
 //        System.out.println(this.tree);
+    }
+
+    /**
+     * Creates a Huffman encoder based on the text to encode.
+     * Requires: text is not empty.
+     */
+    public HuffmanEncoder(String text) {
+        this(Util.countFreqs(text));
+        assert !text.isEmpty();
+    }
+
+    /**
+     * Creates a Huffman encoder based on the given file, which contains the text to encode.
+     */
+    public HuffmanEncoder(File input) {
+        this(Util.countFreqs(input));
     }
 
     /**

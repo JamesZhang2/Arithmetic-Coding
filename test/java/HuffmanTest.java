@@ -2,6 +2,7 @@ import coding.huffman.HuffmanDecoder;
 import coding.huffman.HuffmanEncoder;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,5 +62,26 @@ class HuffmanTest {
             HuffmanDecoder decoder = new HuffmanDecoder(encoder);
             assertEquals(random, decoder.decode(encoded));
         }
+    }
+
+    @Test
+    public void testLargeFiles() {
+        // Encode file into a file
+        File alice = new File("sampleTexts/alice_full.txt");
+        File encoded = new File("alice_full.huffman");
+        HuffmanEncoder encoder = new HuffmanEncoder(alice);
+        encoder.encode(alice, encoded);
+
+        // Decode file into a file
+        File decoded = new File("alice_full_decoded.txt");
+        HuffmanDecoder decoder = new HuffmanDecoder(encoder);
+        decoder.decode(encoded, decoded);
+
+        // Compare file contents
+        TestUtil.assertFileContentEquals(alice, decoded);
+
+        // clean up
+        encoded.delete();
+        decoded.delete();
     }
 }

@@ -83,76 +83,58 @@ class ACTest {
         // Encode string into a file
         String text = "The rain in Spain stays mainly in the plain.";  // this is actually not true by the way
         Encoder encoder = encGen.generate();
-        encoder.encode(text, new File("rain.coding.ac"));
+        File rainEncoded = new File("rain.ac");
+        encoder.encode(text, rainEncoded);
 
         // Decode file back into a string and compare contents
         Decoder decoder = decGen.generate();
-        assertEquals(text, decoder.decode(new File("rain.coding.ac")));
+        assertEquals(text, decoder.decode(rainEncoded));
 
         // Encode file into a file
         encoder = encGen.generate();
-        encoder.encode(new File("sampleTexts/fox.txt"), new File("fox.coding.ac"));
+
+        File foxOriginal = new File("sampleTexts/fox.txt");
+        File foxEncoded = new File("fox.ac");
+        encoder.encode(foxOriginal, foxEncoded);
 
         // Decode file into a file
+        File foxDecoded = new File("fox_decoded.txt");
         decoder = decGen.generate();
-        decoder.decode(new File("fox.coding.ac"), new File("fox_decoded.txt"));
+        decoder.decode(foxEncoded, foxDecoded);
 
         // Compare file contents
-        assertFileContentEquals("sampleTexts/fox.txt", "fox_decoded.txt");
+        TestUtil.assertFileContentEquals(foxOriginal, foxDecoded);
 
         // clean up
-        (new File("fox.coding.ac")).delete();
-        (new File("rain.coding.ac")).delete();
-        (new File("fox_decoded.txt")).delete();
+        rainEncoded.delete();
+        foxEncoded.delete();
+        foxDecoded.delete();
     }
 
     private void testLargeFiles(EncoderGenerator encGen, DecoderGenerator decGen) {
         // Encode file into a file
+        File original = new File("sampleTexts/alice_full.txt");
+        File encoded = new File("alice_full.ac");
         Encoder encoder = encGen.generate();
-        encoder.encode(new File("sampleTexts/alice_full.txt"), new File("alice_full.coding.ac"));
+        encoder.encode(original, encoded);
 
         // Decode file into a file
+        File decoded = new File("alice_full_decoded.txt");
         Decoder decoder = decGen.generate();
-        decoder.decode(new File("alice_full.coding.ac"), new File("alice_full_decoded.txt"));
+        decoder.decode(encoded, decoded);
 
         // Compare file contents
-        assertFileContentEquals("sampleTexts/alice_full.txt", "alice_full_decoded.txt");
+        TestUtil.assertFileContentEquals(original, decoded);
 
         // clean up
-        (new File("alice_full.coding.ac")).delete();
-        (new File("alice_full_decoded.txt")).delete();
+        encoded.delete();
+        decoded.delete();
     }
 
     private void testAll(EncoderGenerator encGen, DecoderGenerator decGen) {
         testEncodeDecodeASCII(encGen, decGen);
         testBasicIO(encGen, decGen);
         testLargeFiles(encGen, decGen);
-    }
-
-    /**
-     * Assert that two text files have the same contents
-     */
-    private void assertFileContentEquals(String filename1, String filename2) {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(filename1));
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
-            while (line != null) {
-                sb.append(line);
-                line = br.readLine();
-            }
-
-            BufferedReader br2 = new BufferedReader(new FileReader(filename2));
-            StringBuilder sb2 = new StringBuilder();
-            line = br2.readLine();
-            while (line != null) {
-                sb2.append(line);
-                line = br2.readLine();
-            }
-            assertEquals(sb.toString(), sb2.toString());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Test
