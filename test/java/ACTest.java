@@ -116,7 +116,7 @@ class ACTest {
         decoder.decode(new File("alice_full.coding.ac"), new File("alice_full_decoded.txt"));
 
         // Compare file contents
-        assertFileContentEquals("sampleTexts/alice_full.txt", "alice1_decoded.txt");
+        assertFileContentEquals("sampleTexts/alice_full.txt", "alice_full_decoded.txt");
 
         // clean up
         (new File("alice_full.coding.ac")).delete();
