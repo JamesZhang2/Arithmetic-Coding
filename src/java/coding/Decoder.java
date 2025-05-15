@@ -5,6 +5,8 @@ import java.io.File;
 public interface Decoder {
     /**
      * Decodes a sequence of bytes into a String.
+     * If the number of bits in the code is not divisible by 8,
+     * then zeros are padded at the end of the last byte.
      */
     String decode(byte[] bytes);
 

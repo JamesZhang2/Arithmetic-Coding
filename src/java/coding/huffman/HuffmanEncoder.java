@@ -15,13 +15,39 @@ public class HuffmanEncoder extends AbstractEncoder {
 
     @Override
     public byte[] encode(String text) {
-        return new byte[0];  // TODO
+        return Util.toByteArray(encodeAsList(text));
+    }
+
+    /**
+     * Encode the text as a string of 1s and 0s.
+     * Unlike arithmetic coding, Huffman coding is a symbol code,
+     * so substrings of the output can be matched to each symbol of the input text.
+     */
+    public String encodeAsString(String text) {
+        return encodeAsList(text).stream().map(String::valueOf).collect(Collectors.joining());
+    }
+
+    /**
+     * Encode the text as a list of 1s and 0s.
+     */
+    private List<Integer> encodeAsList(String text) {
+        List<Integer> encoded = new ArrayList<>();
+        for (char c : text.toCharArray()) {
+            if (codes.get(c).isEmpty()) {
+                throw new IllegalArgumentException("Unsupported character: " + c);
+            }
+            encoded.addAll(codes.get(c));
+        }
+        encoded.addAll(codes.get(128));
+        return encoded;
     }
 
     /**
      * Creates a Huffman encoder based on the text to encode.
+     * Requires: text is not empty.
      */
     public HuffmanEncoder(String text) {
+        assert !text.isEmpty();
         int[] freqs = Util.countFreqs(text);
         // Greedy algorithm: take the two least frequent symbols,
         // merge the two symbols into a new symbol by creating a new node with those symbols as children.
@@ -104,7 +130,7 @@ public class HuffmanEncoder extends AbstractEncoder {
         int[] pair = pq.poll();
         assert pair[1] == text.length() + 1;  // final node should have all the frequency (+1 for end-of-file)
         this.tree = trees.get(pair[0]);
-        System.out.println(this.tree);
+//        System.out.println(this.tree);
     }
 
     /**
@@ -121,7 +147,7 @@ public class HuffmanEncoder extends AbstractEncoder {
         for (char c = 0; c < 129; c++) {
             this.codes.add(new LinkedList<>(codes.get(c)));
         }
-        this.tree = generateTreeFromCodes(codes);
+        this.tree = HuffmanTree.generateTreeFromCodes(codes);
     }
 
     /**
@@ -143,42 +169,9 @@ public class HuffmanEncoder extends AbstractEncoder {
             }
             codes.add(code);
         }
-        System.out.println(codes);
-        this.tree = generateTreeFromCodes(codes);
-        System.out.println(this.tree);
-    }
-
-    /**
-     * Generates the Huffman tree based on the given codes.
-     * Postcondition: codes is unchanged.
-     */
-    private HuffmanTree generateTreeFromCodes(List<List<Integer>> codes) {
-        HuffmanTree root = new HuffmanTree();
-        for (char c = 0; c < codes.size(); c++) {
-            if (codes.get(c).isEmpty()) {
-                continue;
-            }
-            HuffmanTree cur = root;
-            for (int i = 0; i < codes.get(c).size(); i++) {
-                if (codes.get(c).get(i) == 0) {
-                    // go left
-                    if (cur.left == null) {
-                        cur.left = new HuffmanTree();
-                    }
-                    cur = cur.left;
-                } else if (codes.get(c).get(i) == 1) {
-                    // go right
-                    if (cur.right == null) {
-                        cur.right = new HuffmanTree();
-                    }
-                    cur = cur.right;
-                } else {
-                    throw new IllegalArgumentException(String.format("Index %d of the codeword for %c is not 0 or 1. It's %d.", i, c, codes.get(c).get(i)));
-                }
-            }
-            cur.c = c;
-        }
-        return root;
+//        System.out.println(codes);
+        this.tree = HuffmanTree.generateTreeFromCodes(codes);
+//        System.out.println(this.tree);
     }
 
     /**
@@ -194,5 +187,12 @@ public class HuffmanEncoder extends AbstractEncoder {
             }
         }
         return map;
+    }
+
+    /**
+     * @return a copy of the Huffman tree used by this Huffman encoder
+     */
+    public HuffmanTree getTree() {
+        return tree.clone();
     }
 }

@@ -5,6 +5,8 @@ import java.io.File;
 public interface Encoder {
     /**
      * Encodes the given text to a sequence of bytes.
+     * If the number of bits in the code is not divisible by 8,
+     * then zeros are padded at the end of the last byte.
      */
     byte[] encode(String text);
 

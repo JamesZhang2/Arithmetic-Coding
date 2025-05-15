@@ -1,6 +1,7 @@
 package coding.ac;
 
 import coding.AbstractEncoder;
+import coding.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,6 +110,35 @@ public class ACEncoder extends AbstractEncoder {
         ans.add(1);
 //        printAsBinaryFraction(ans);
 //        printAsApproxDecimalFraction(ans);
-        return toByteArray(ans);
+        return Util.toByteArray(ans);
+    }
+
+    /**
+     * Print a list of 1s and 0s as a binary fraction (for debugging purposes)
+     */
+    private void printAsBinaryFraction(List<Integer> nums) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("0.");
+        for (int num : nums) {
+            sb.append(num);
+        }
+        System.out.println(sb);
+    }
+
+    /**
+     * Print a list of 1s and 0s as an approximate decimal fraction (for debugging purposes)
+     * This is as accurate as the precision of a double
+     */
+    private void printAsApproxDecimalFraction(List<Integer> nums) {
+        double unit = 1;
+        double ans = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            unit /= 2;
+            if (unit == 0) {
+                break;
+            }
+            ans += nums.get(i) * unit;
+        }
+        System.out.println(ans);
     }
 }

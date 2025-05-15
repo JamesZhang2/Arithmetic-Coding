@@ -38,7 +38,7 @@ class ACTest {
         }
 
         for (int i = 0; i < 1000; i++) {
-            String random = getRandomABCString(i);
+            String random = TestUtil.getRandomABCString(i);
 //            System.out.println(random);
             ProbModel abcModel = new FixedProbModel(probs);
             Encoder encoder = new ACEncoder(abcModel);
@@ -47,14 +47,6 @@ class ACTest {
             Decoder decoder = new ACDecoder(abcModel);
             assertEquals(random, decoder.decode(encoded));
         }
-    }
-
-    private String getRandomABCString(int length) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            sb.append((char)('A' + Math.random() * 3));
-        }
-        return sb.toString();
     }
 
     interface EncoderGenerator {
@@ -70,21 +62,7 @@ class ACTest {
      * Note that a new encoder and decoder will be generated each time.
      */
     private void testEncodeDecodeASCII(EncoderGenerator encGen, DecoderGenerator decGen) {
-        String[] strings = {
-                "",
-                ".",
-                "42",
-                "\n\t\r ",
-                "James",
-                "aaaaa",
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                "the quick brown fox jumps over the lazy dog",
-                "~When there's a will, there's a way!~",
-                "Mary had a little lamb.",
-                "A monad is a monoid in the category of endofunctors.",
-                "Robert'); DROP TABLE STUDENTS; --"
-        };
-        for (String str : strings) {
+        for (String str : TestUtil.TEST_STRINGS) {
             Encoder encoder = encGen.generate();
             byte[] encoded = encoder.encode(str);
             Decoder decoder = decGen.generate();
@@ -92,21 +70,13 @@ class ACTest {
         }
 
         for (int i = 0; i < 1000; i++) {
-            String random = getRandomString(i);
+            String random = TestUtil.getRandomString(i);
 //            System.out.println(random);
             Encoder encoder = encGen.generate();
             byte[] encoded = encoder.encode(random);
             Decoder decoder = decGen.generate();
             assertEquals(random, decoder.decode(encoded));
         }
-    }
-
-    private String getRandomString(int length) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            sb.append((char)(Math.random() * 128));
-        }
-        return sb.toString();
     }
 
     private void testBasicIO(EncoderGenerator encGen, DecoderGenerator decGen) {
