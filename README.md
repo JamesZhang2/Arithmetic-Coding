@@ -17,7 +17,9 @@ The encoder and decoder takes a probability model that predicts the probability 
 The fixed probability model always assigns fixed probabilities $p_c$ to each character $c$, regardless of what it has read.
 
 The Dirichlet model is an adaptive model that counts the frequency $f_c$ of each character in the previous context and then assigns the following probability:
+
 $$P(x_n = c | x_1, \ldots, x_{n - 1}) = \frac{f_c + \alpha}{\sum_i (f_i + \alpha)}$$
+
 where $\alpha$ is a hyperparameter. Note that a smaller $\alpha$ means that the model is more responsive to the context, assigning greater probabilities to the symbols that it has seen.
 
 The encoder and decoder supports renormalization and underflow handling. For encoding, we keep track of the possible doubles that can be used to encode what we've seen so far as a range `[low, high)`. If the range of possible doubles falls entirely in $[0, \frac{1}{2})$ or $[\frac{1}{2}, 1)$, we output a bit and renormalize the interval, scaling it up by 2. If the range of possible doubles falls entirely in $[\frac{1}{4}, \frac{3}{4})$, we scale up the interval and remember that we had an underflow condition. When the interval finally falls inside $[0, \frac{1}{2})$ or $[\frac{1}{2}, 1)$, we output a bit and then immediately output the opposite bit $t$ times, where $t$ is the number of times that the underflow condition happened. We then reset the number of underflow conditions to 0.
