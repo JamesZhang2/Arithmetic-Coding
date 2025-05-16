@@ -146,8 +146,8 @@ class ACTest {
     public void testDirichlet() {
         testAll(() -> new ACEncoder(new DirichletModel()),
                 () -> new ACDecoder(new DirichletModel()));
-        testAll(() -> new ACEncoder(new DirichletModel(10)),
-                () -> new ACDecoder(new DirichletModel(10)));
+        testAll(() -> new ACEncoder(new DirichletModel(100)),
+                () -> new ACDecoder(new DirichletModel(100)));
         testAll(() -> new ACEncoder(new DirichletModel(0.01)),
                 () -> new ACDecoder(new DirichletModel(0.01)));
     }
@@ -156,8 +156,8 @@ class ACTest {
     public void testBigramDirichlet() {
         testAll(() -> new ACEncoder(new BigramDirichletModel()),
                 () -> new ACDecoder((new BigramDirichletModel())));
-        testAll(() -> new ACEncoder(new BigramDirichletModel(10)),
-                () -> new ACDecoder((new BigramDirichletModel(10))));
+        testAll(() -> new ACEncoder(new BigramDirichletModel(100)),
+                () -> new ACDecoder((new BigramDirichletModel(100))));
         testAll(() -> new ACEncoder(new BigramDirichletModel(0.01)),
                 () -> new ACDecoder((new BigramDirichletModel(0.01))));
     }

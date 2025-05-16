@@ -12,7 +12,7 @@ public abstract class AbstractEncoder implements Encoder {
             if (output.createNewFile()) {
                 System.out.println("Created file " + output.getName());
             }
-            System.out.println("Writing output to file " + output.getName());
+            System.out.println("Writing encoded output to file " + output.getName());
             OutputStream os = new FileOutputStream(output);
             os.write(encode(text));
             os.close();
@@ -32,6 +32,7 @@ public abstract class AbstractEncoder implements Encoder {
                 line = br.readLine();
             }
             encode(sb.toString(), output);
+            br.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -1,4 +1,7 @@
 .idea/
 out/
 **/.DS_Store
-test/sampleTexts/generated
+test/sampleTexts/generated/
+test/encoded/
+test/decoded/
+~$*.xlsx

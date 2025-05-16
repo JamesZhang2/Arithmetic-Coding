@@ -58,6 +58,7 @@ public class TestUtil {
                 sb.append(line);
                 line = br.readLine();
             }
+            br.close();
 
             BufferedReader br2 = new BufferedReader(new FileReader(file2));
             StringBuilder sb2 = new StringBuilder();
@@ -67,6 +68,7 @@ public class TestUtil {
                 line = br2.readLine();
             }
             assertEquals(sb.toString(), sb2.toString());
+            br2.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
