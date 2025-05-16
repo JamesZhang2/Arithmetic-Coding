@@ -55,7 +55,7 @@ For benchmarking, we used the following files. Some of the files are randomly ge
 
 In addition to the Huffman, AC with Fixed Probability (with equal probability for each character), AC with Dirichlet, and AC with Bigram Dirichlet encoding schemes, we also included the size of the original file and the size of the file compressed by `zip`, an industry-standard compression scheme.
 
-Here are the benchmarking results:
+Here are the benchmarking results (all file sizes are in bytes):
 
 |                        | alice_full | all_a   | biased_random_50 | biased_random_99 | english_words | random_bits | unif_random |
 |------------------------| ---------- | ------- | ---------------- | ---------------- | ------------- | ----------- | ----------- |
@@ -84,6 +84,23 @@ As percentage of original file size:
 | fixed_prob             | 85.60%     | 87.64%  | 86.96%           | 87.63%           | 76.09%        | 87.64%      | 86.27%      |
 | huffman                | 55.26%     | 12.50%  | 55.32%           | 13.36%           | 46.04%        | 18.74%      | 86.02%      |
 | zip                    | 36.54%     | 0.12%   | 65.23%           | 3.35%            | 36.89%        | 15.91%      | 87.70%      |
+
+A visual representation (green = more compression, red = less compression):
+![](images/benchmarking_1.png)
+
+With original and fixed probability AC scheme removed:
+![](images/benchmarking_2.png)
+
+### Discussion
+
+We have a few observations:
+
+- The fixed probability arithmetic coding scheme consistently achieves a compression rate of 87.5%, which is not great compared to other methods. This is expected since each character is given the same range size (equal probability), so the scheme cannot take advantage of the distribution of the characters and the relations between characters. The 87.5% comes from the fact that we're only encoding ASCII characters 0-127, which means that for every byte, the most-significant bit is 0. Therefore, for every 8 bits, the encoding scheme only needs 7 bits to encode the information.
+  - Note that `english_words.txt` is a significant outlier for unknown reasons.
+- For the file of uniform random and independent ASCII characters, none of the schemes (including zip) can achieve a compression better than around 87.5%. This is expected because that's the amount of entropy that these files have.
+- The compression rate of Huffman is significantly higher than the adaptive arithmetic coding schemes for the file with all 'a's and the file with roughly 99% 'a's. This demonstrates the power of adaptive arithmetic coding: It can assign smaller and smaller probabilities to symbols that don't appear at all, while assigning larger and larger probabilities to symbols that always appear. In Huffman, however, each symbol must take a minimum of 1 bit. In the extreme case of all 'a's, Huffman has to use a million and 1 bits, one for each 'a' and one for the stop symbol, whereas the adaptive models can just use 8 or 9 bits to represent the entire sequence of 'a's since it has very little entropy. In these extreme cases, the adaptive arithmetic coding schemes do even better than the industry standard `zip`!
+- For the Dirichlet and Bigram Dirichlet models, a smaller alpha seems to work better than a larger alpha, meaning that models that adapt more quickly to the context does better. If alpha is large, the model has to keep assigning large probabilities to symbols that it hasn't seen before, whereas if alpha is small, the probability for unseen symbols diminishes very quickly.
+- For natural English text (*Alice's Adventures in Wonderland*), the Bigram Dirichlet models with small alpha do better than the Dirichlet models with small alpha. This is because, as noted above, the letters in the English language are not drawn uniformly at random, and the Bigram Dirichlet model is able to learn the correlations between letters while the Dirichlet model can't. This is also true but to a lesser extent for the list of English words. For the random characters, since the characters are generated independently, the Bigram Dirichlet models do not perform better than the corresponding Dirichlet models. In fact, they have more overheads since they require more space to store all the frequencies.
 
 ## References
 
