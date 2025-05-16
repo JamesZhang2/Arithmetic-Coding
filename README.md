@@ -39,3 +39,4 @@ If `[low, high)` falls entirely in $[0, \frac{1}{2})$ or $[\frac{1}{2}, 1)$ or $
 - https://michaeldipperstein.github.io/arithmetic.html
 - I asked ChatGPT a few high-level conceptual questions and to look up documentation, but didn't use it to generate large chunks of code.
 - I used Alice's Adventures in Wonderland as a sample text. This is found in The Project Gutenberg: https://www.gutenberg.org/ebooks/11. I replaced non-ASCII characters with ASCII characters.
+- The 10,000 English words for benchmarking are from https://www.mit.edu/~ecprice/wordlist.10000.

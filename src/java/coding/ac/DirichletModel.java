@@ -32,7 +32,7 @@ public class DirichletModel implements ProbModel {
         // P(x_n = c | x_1, ..., x_{n - 1}) = (freq[c] + alpha) / (sum_i (freq[i] + alpha))
         double[] probs = new double[freqs.length];
         double runningSum = 0;
-        double sum = charsSeen + 129 * alpha;  // the end-of-file symbol definitely has not appeared yet
+        double sum = charsSeen + (freqs.length + 1) * alpha;  // the end-of-file symbol definitely has not appeared yet
         for (int i = 0; i < freqs.length; i++) {
             runningSum += (freqs[i] + alpha);
             probs[i] = runningSum / sum;

@@ -151,4 +151,14 @@ class ACTest {
         testAll(() -> new ACEncoder(new DirichletModel(0.01)),
                 () -> new ACDecoder(new DirichletModel(0.01)));
     }
+
+    @Test
+    public void testBigramDirichlet() {
+        testAll(() -> new ACEncoder(new BigramDirichletModel()),
+                () -> new ACDecoder((new BigramDirichletModel())));
+        testAll(() -> new ACEncoder(new BigramDirichletModel(10)),
+                () -> new ACDecoder((new BigramDirichletModel(10))));
+        testAll(() -> new ACEncoder(new BigramDirichletModel(0.01)),
+                () -> new ACDecoder((new BigramDirichletModel(0.01))));
+    }
 }
